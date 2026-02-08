@@ -2,22 +2,14 @@
 
 Sistema em Python que recebe a URL de uma playlist do Spotify e baixa as músicas localmente em MP3 **sem exigir credenciais da API do Spotify**.
 
-## Correção do erro de DRM
-Se você recebeu o erro:
-
-```text
-ERROR: [DRM] The requested site is known to use DRM protection
-```
-
-isso acontecia porque o `yt-dlp` estava tentando extrair diretamente do Spotify.
-Agora o script:
-1. Lê os metadados da playlist pública pelo HTML/JSON da página do Spotify.
-2. Usa `yt-dlp` apenas para buscar e baixar o áudio no YouTube.
+## Como funciona
+1. Lê as músicas da playlist via extractor do próprio `yt-dlp` (sem `client_id`/`client_secret`).
+2. Para cada faixa, realiza busca no YouTube usando título + artista.
+3. Baixa o melhor áudio disponível e converte para MP3 (192kbps, via ffmpeg).
 
 ## Pré-requisitos
 - Python 3.10+
 - `ffmpeg` instalado no sistema
-- `yt-dlp` instalado (via `requirements.txt`)
 
 ## Instalação
 ```bash
@@ -45,6 +37,6 @@ python downloader.py "https://open.spotify.com/playlist/SEU_ID" -o minhas-musica
 Os arquivos são salvos em `<diretorio_saida>/<playlist_id>/`.
 
 ## Observações
-- Funciona para playlists públicas.
 - Downloads dependem da disponibilidade dos vídeos no YouTube.
+- Como não usa API oficial, a extração dos metadados depende do suporte atual do `yt-dlp` ao Spotify.
 - O script pula músicas já baixadas (mesmo nome de arquivo).
